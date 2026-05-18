@@ -11,19 +11,23 @@ import traceback
 from typing import Optional
 
 from agents.intake_agent      import PatientIntakeAgent
+from agents.diagnostic_agent  import DiagnosticReasoningAgent
 
 
 
 class OrchestratorAgent:
     def __init__(self):
         self.intake     = PatientIntakeAgent()
- 
+        self.diagnostic = DiagnosticReasoningAgent()
+
 
     def run(self, raw_patient: dict, use_llm: bool = True) -> dict:
         """
         Full pipeline:
           1. Intake    → structured patient summary + flags
-
+          2. Diagnostic→ differential diagnoses + SHAP scores
+          3. Treatment → evidence-based care pathway
+          4. Liaison   → plain-language report for clinician
         """
         pipeline_start = time.time()
         result = {
@@ -49,8 +53,7 @@ class OrchestratorAgent:
             diag_out["agent_ms"] = round((time.time() - t0) * 1000)
             result["diagnostic"] = diag_out
 
-          
-
+        
         except Exception as exc:
             result["error"] = str(exc)
             result["traceback"] = traceback.format_exc()
