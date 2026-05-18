@@ -75,6 +75,9 @@ class OrchestratorAgent:
             liaison_out["agent_ms"] = round((time.time() - t0) * 1000)
             result["liaison"] = liaison_out
 
+        except Exception as exc:
+            result["error"] = str(exc)
+            result["traceback"] = traceback.format_exc()
 
         result["pipeline_ms"] = round((time.time() - pipeline_start) * 1000)
         return result
