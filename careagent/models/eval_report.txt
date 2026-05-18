@@ -1,0 +1,18 @@
+Test accuracy: 0.9317
+
+                    precision    recall  f1-score   support
+
+            Sepsis       0.88      0.98      0.93        60
+      Septic Shock       1.00      0.97      0.98        60
+          Acute MI       0.97      0.95      0.96        60
+     Heart Failure       0.98      0.95      0.97        60
+         Pneumonia       0.91      0.82      0.86        60
+               AKI       0.97      0.98      0.98        60
+Pulmonary Embolism       0.81      0.92      0.86        60
+            Stroke       0.98      0.97      0.97        60
+               DKA       1.00      1.00      1.00        60
+ COPD Exacerbation       0.84      0.78      0.81        60
+
+          accuracy                           0.93       600
+         macro avg       0.93      0.93      0.93       600
+      weighted avg       0.93      0.93      0.93       600
