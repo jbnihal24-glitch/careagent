@@ -42,6 +42,38 @@ class OrchestratorAgent:
             "liaison":   {},
         }
 
+        try:
+            # ── Step 1: Patient Intake ─────────────────────────────────
+            t0 = time.time()
+            intake_out = self.intake.process(raw_patient)
+            intake_out["agent_ms"] = round((time.time() - t0) * 1000)
+            result["intake"] = intake_out
+
+            # ── Step 2: Diagnostic Reasoning ──────────────────────────
+            t0 = time.time()
+            diag_out = self.diagnostic.reason(intake_out)
+            diag_out["agent_ms"] = round((time.time() - t0) * 1000)
+            result["diagnostic"] = diag_out
+
+            # ── Step 3: Treatment Planning ────────────────────────────
+            t0 = time.time()
+            tx_out = self.treatment.plan(
+                top_diagnosis=diag_out["differentials"][0]["diagnosis"],
+                patient_summary=intake_out,
+            )
+            tx_out["agent_ms"] = round((time.time() - t0) * 1000)
+            result["treatment"] = tx_out
+
+            # ── Step 4: Clinician Liaison ─────────────────────────────
+            t0 = time.time()
+            liaison_out = self.liaison.generate_report(
+                intake=intake_out,
+                diagnostic=diag_out,
+                treatment=tx_out,
+                use_llm=use_llm,
+            )
+            liaison_out["agent_ms"] = round((time.time() - t0) * 1000)
+            result["liaison"] = liaison_out
 
         except Exception as exc:
             result["error"] = str(exc)
